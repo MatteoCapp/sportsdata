@@ -1,0 +1,58 @@
+https://mermaid.live/view#pako:eNqFVWFT4kgQ_StdU7V3WIWsKMiaD1cHARUKFy4J3q1kyxqSIcw5zKQmE11R__v2JAK64B2fmM70637dr3ueSKRiRhwyF-ohWlBtIOiGEvD36RO4gjNpyqM77Pe-BtNzraRhMgaP0cjAZ5jgybDvcHj4x7PHowVnmaFwGQTjZ_B7big3aEN-z4RQ4PMo12y1ouWXLJ8lmqaL3e8wrdfA77sTr3dz03ZgSKGrEiop_AZ9AZ3cGDrPlebfSyT7w5DTkPgMIbh5dJWc8wQqHkuUoEvMVAEDd-T5ByEpcoZB-xwdBg-mnZvFOReGaah0VPyY5FTHDrhMRxS4gEDdMQmDvwPrug2I_nBYQ_IhmWQUUnS_p4LHVLOQPMNgUqJPDBcZVK5ohCWSDDOHjsYDpwIP_H8xjaZxrktMd9JFUDfPjFpOMqa7zFBE95m-5xGDyvD3PrZEp5oZVjj7qeYy2cbA_q37UoQqIm2bh5XAomIDDC3CBd6eLmJpjVZCMP1BG7cXYHpcw6J_DbzRcNjzHOjDNU-44DDRMyrftg9jWWobVyyZv-SYlFS2B1iF-ZxHCh7YDBuZpbactpj2M3SD0V6OCPrKcUwzrGdxE9JccMMtQd-73ifTspwfifS12NMTlGjPu-67Pcury7Hotno4GUOVcJROzFGpGfY8y97q1Lu-bU-CS2RrhbftHTrJz6hXJK3piivJ3mvDOk4w4tRqg-mN4wW2zt6GsVZzrG0V_gw0lRlOKZqpKIVwx4XIdgHH3miAgOj6L4vMBrOdJDyXCQOB8skpnuCeU7jg5jKfQXvc30UajDpW8GrWjndhIqV0zCVFWVqcUcqkbzRj5oqm76F201sPhIc8A7ZMBaLY5vX-CW4vLisVrOO4_5paSA4OdtL6L4CRf7VGeJfUFuhXOSHWpod7zLZDe8yWyB4zZrcGX2MWu8nrjbdWC7lrLUvzq7WguzbuKNtjqco4qvTxA3FvL8C0UbMoI78fjLxvVuJXNKGrFZecvVu8eGlqi_vqiZsEKlag1lKFV2WVBxZFNQjsQouUHVwJ_l_DvZOLoAWPbmcPjZ40uOJx0Lq4qGY0-2hU159h2qwBvmH94Bv0oNsO2p22j1N7gYvIj3Cx4Np-Q8i-diEpgmzIbIhUwVOCVcuBKt-S2iGmeYtMpqikTcyxykyiGZpRS1uCpEoSzWPiGJ2zKlkyvaT2SJ7slZCYBVuiOh38iy_JXUhC-YI-KZU3Si3XblrlyYI4mHiGpzyNUdJdTpH-9goGY9pVuTTEaTbPCgziPJEfxDmpf6m1jk5Pjhr1ZuukddaskkfitJq1k7PGUbNRr7cazbPT1kuVrIqgR7XW6fFp4_gYXeqnZ41G6-UnpUiQ1A
+
+
+
+
+prompt
+flowchart TD
+    %% Client
+    CLIENT[Frontend React / Utente] -->|Richiesta HTTP| SEC
+
+    %% Livello Sicurezza
+    subgraph Livello Sicurezza [1. SICUREZZA: La Dogana & Il Buttafuori]
+        SEC["SecurityConfig (Regolamento e CORS)"] --> JAF["JwtAuthFilter (Bodyguard: Cerca il Token JWT)"]
+        JAF -.->|"Usa per validare"| JU["JwtUtils (Macchinetta Braccialetti)"]
+        JAF -.->|"Usa per tradurre"| CUD["CustomUserDetailsService (L'Interprete per Spring)"]
+    end
+
+    JAF -->|"Richiesta Autorizzata"| CTR
+
+    %% Livello Controller
+    subgraph Livello Controller [2. CONTROLLER: I Vigili Urbani]
+        CTR["Controllers (Smistano il traffico web e spacchettano i DTO)"]
+    end
+
+    CTR -->|"Passa i DTO puliti"| SRV
+
+    %% Livello Service
+    subgraph Livello Service [3. SERVICE: I Direttori / Logica di Business]
+        SRV_AUTH["AuthService (Login/Registrazione)"]
+        SRV_USER["UserService (Gestione Profili, @Transactional per Skills)"]
+        SRV_PROJ["ProjectService (Aggiunge linguaggi via GitHub API)"]
+        SRV_JOB["JobAdService (Aggiunge coordinate via OpenStreetMap)"]
+        
+        SRV_PROJ -.->|"RestTemplate"| EXT_GH(("API GitHub"))
+        SRV_JOB -.->|"RestTemplate"| EXT_OSM(("API OpenStreetMap"))
+    end
+
+    CTR -.-> SRV_AUTH
+    CTR -.-> SRV_USER
+    CTR -.-> SRV_PROJ
+    CTR -.-> SRV_JOB
+
+    SRV_AUTH --> REP
+    SRV_USER --> REP
+    SRV_PROJ --> REP
+    SRV_JOB --> REP
+
+    %% Livello Repository
+    subgraph Livello Repository [4. REPOSITORY: I Magazzinieri]
+        REP["Repositories (UserRepo, ProjectRepo, ecc. Traducono in SQL)"]
+    end
+
+    REP --> DB
+
+    %% Livello Entity / Database
+    subgraph Livello Database [5. ENTITY E DATABASE: Gli Scaffali]
+        ENT["Entities (User, Project, Role, Skill)"] -.- DB_SQL[("Database PostgreSQL")]
+    end
